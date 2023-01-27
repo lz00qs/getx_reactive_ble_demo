@@ -9,23 +9,15 @@ import '../../ble/ble_status_monitor.dart';
 class SplashPage extends StatelessWidget {
   SplashPage({
     required this.ble,
-    required this.monitor,
     Key? key,
-  }) : super(key: key) {
-    // _myBleStatusController = Get.put(monitor);
-  }
+  }) : super(key: key);
 
   final FlutterReactiveBle ble;
 
-  final BleStatusMonitor monitor;
-
-  // BleStatusMonitor _myBleStatusController;
+  final monitor = Get.find<BleStatusMonitor>();
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   body: Center(child: Obx(() => Text("test: ${monitor.rxBleStatus.value}"))),
-    // );
     return Obx(() {
       if (monitor.rxBleStatus.value == BleStatus.ready) {
         return const BleDevPage();

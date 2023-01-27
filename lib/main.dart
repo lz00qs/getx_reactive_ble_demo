@@ -11,25 +11,21 @@ void main() {
   final ble = FlutterReactiveBle();
   final _bleLogger = BleLogger(ble: ble);
   // final _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
-  final monitor = BleStatusMonitor(ble);
-  runApp(MyApp(ble: ble,monitor: monitor,));
+  Get.put(BleStatusMonitor(ble));
+  runApp(MyApp(ble: ble));
 }
 
-class MyApp extends StatelessWidget{
-  const MyApp({required this.ble, required this.monitor,Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({required this.ble, Key? key}) : super(key: key);
 
   final FlutterReactiveBle ble;
-
-  final BleStatusMonitor monitor;
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,
-      home: SplashPage(ble: ble,monitor: monitor),
+      home: SplashPage(ble: ble),
       getPages: AppRoutes.routes,
     );
   }
-
 }
-
