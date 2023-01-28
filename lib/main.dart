@@ -12,7 +12,7 @@ import 'ble/ble_status_monitor.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final ble = FlutterReactiveBle();
-  final bleLogger = BleLogger(ble: ble);
+  final bleLogger = Get.put(BleLogger(ble: ble));
   // final _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
   Get.put(BleStatusMonitor(ble));
   Get.put(BleScanner(ble: ble, logMessage: bleLogger.addToLog));
