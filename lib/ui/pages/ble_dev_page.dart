@@ -141,6 +141,8 @@ class BleDevPageState extends State<BleDevPage> {
                           // leading: const BluetoothIcon(),
                           onTap: () async {
                             widget.scanner.stopScan();
+                            await Get.toNamed('/bleDeviceDetailPage',
+                                arguments: device);
                             // await Navigator.push<void>(
                             //     context,
                             //     MaterialPageRoute(

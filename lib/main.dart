@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
+import 'package:getx_reactive_ble_demo/ble/ble_device_connector.dart';
+import 'package:getx_reactive_ble_demo/routes/app_routes.dart';
 
-// import 'package:getx_reactive_ble_demo/routes/app_routes.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/splash_page.dart';
 import 'ble/ble_logger.dart';
 import 'ble/ble_scanner.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         ble: ble,
         bleLogger: bleLogger,
       ),
-      // getPages: AppRoutes.routes,
+      getPages: AppRoutes.routes,
     );
   }
 }
