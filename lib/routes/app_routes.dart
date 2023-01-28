@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/splash_page.dart';
 import '../ui/pages/ble_dev_page.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -13,10 +14,10 @@ class AppRoutes {
     //   name: "/bleStatusPage",
     //   page: () => BleStatusPage(),
     // ),
-    GetPage(
-      name: "/bleDevPage",
-      page: () => const BleDevPage(),
-    ),
+    // GetPage(
+    //   name: "/bleDevPage",
+    //   page: () => BleDevPage(bleLogger: BleLogger(),),
+    // ),
     // GetPage(name: "/splashPage", page: () => const SplashPage()),
   ];
 }

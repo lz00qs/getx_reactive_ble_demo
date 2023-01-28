@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/ble_dev_page.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/ble_status_page.dart';
 import 'package:get/get.dart';
@@ -9,10 +10,13 @@ import '../../ble/ble_status_monitor.dart';
 class SplashPage extends StatelessWidget {
   SplashPage({
     required this.ble,
+    required this.bleLogger,
     Key? key,
   }) : super(key: key);
 
   final FlutterReactiveBle ble;
+
+  final BleLogger bleLogger;
 
   final monitor = Get.find<BleStatusMonitor>();
 
@@ -20,7 +24,9 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (monitor.rxBleStatus.value == BleStatus.ready) {
-        return const BleDevPage();
+        return BleDevPage(
+          bleLogger: bleLogger,
+        );
       } else {
         return BleStatusPage(status: monitor.rxBleStatus.value);
       }
