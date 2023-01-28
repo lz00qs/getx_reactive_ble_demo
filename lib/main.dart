@@ -15,6 +15,7 @@ void main() {
   // final _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
   Get.put(BleStatusMonitor(ble));
   Get.put(BleScanner(ble: ble, logMessage: bleLogger.addToLog));
+  Get.put(BleDeviceConnector(ble: ble, logMessage: bleLogger.addToLog));
   runApp(MyApp(
     ble: ble,
     bleLogger: bleLogger,
