@@ -225,6 +225,8 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
                     ),
                   ),
                   ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    // disable scroll in ListView
                     shrinkWrap: true,
                     itemBuilder: (context, index) => _characteristicTile(
                       service.characteristics[index],
