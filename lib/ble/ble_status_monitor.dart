@@ -1,6 +1,5 @@
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-import 'ble_reactive_state.dart';
 
 class BleStatusMonitor extends GetxController{
   BleStatusMonitor(this._ble) {

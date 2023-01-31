@@ -1,13 +1,5 @@
 import 'package:get/get.dart';
-import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/ble_device_detail_page.dart';
-import 'package:getx_reactive_ble_demo/ui/pages/splash_page.dart';
-import '../ui/pages/ble_dev_page.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-
-/// getx name routes
-
-import '../ui/pages/ble_status_page.dart';
 
 class AppRoutes {
   static final routes = [
