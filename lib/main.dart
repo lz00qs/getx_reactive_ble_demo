@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'package:getx_reactive_ble_demo/ble/ble_device_connector.dart';
+import 'package:getx_reactive_ble_demo/ble/ble_device_interactor.dart';
 import 'package:getx_reactive_ble_demo/routes/app_routes.dart';
 
 import 'package:getx_reactive_ble_demo/ui/pages/splash_page.dart';
@@ -17,6 +18,13 @@ void main() {
   Get.put(BleStatusMonitor(ble));
   Get.put(BleScanner(ble: ble, logMessage: bleLogger.addToLog));
   Get.put(BleDeviceConnector(ble: ble, logMessage: bleLogger.addToLog));
+  Get.put(BleDeviceInteractor(
+      bleDiscoverServices: ble.discoverServices,
+      readCharacteristic: ble.readCharacteristic,
+      writeWithResponse: ble.writeCharacteristicWithResponse,
+      writeWithOutResponse: ble.writeCharacteristicWithoutResponse,
+      subscribeToCharacteristic: ble.subscribeToCharacteristic,
+      logMessage: bleLogger.addToLog));
   runApp(MyApp(
     ble: ble,
     bleLogger: bleLogger,
