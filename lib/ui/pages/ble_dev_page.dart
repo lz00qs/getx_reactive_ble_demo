@@ -59,16 +59,6 @@ class BleDevPageState extends State<BleDevPage> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      bool scanning;
-      List<DiscoveredDevice> discoveredDevices;
-      if (widget.scanner.rxBleScannerState.value != null) {
-        scanning = widget.scanner.rxBleScannerState.value!.scanIsInProgress;
-        discoveredDevices =
-            widget.scanner.rxBleScannerState.value!.discoveredDevices;
-      } else {
-        discoveredDevices = [];
-        scanning = false;
-      }
       return Scaffold(
         appBar: AppBar(
           title: const Text('Scan for devices'),
@@ -84,7 +74,9 @@ class BleDevPageState extends State<BleDevPage> {
                   const Text('Service UUID (2, 4, 16 bytes):'),
                   TextField(
                     controller: _uuidController,
-                    enabled: !scanning,
+                    enabled: !(widget.scanner.rxBleScannerState.value
+                            ?.scanIsInProgress ??
+                        false),
                     decoration: InputDecoration(
                         errorText:
                             _uuidController.text.isEmpty || _isValidUuidInput()
@@ -97,13 +89,20 @@ class BleDevPageState extends State<BleDevPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                        onPressed: !scanning && _isValidUuidInput()
+                        onPressed: !(widget.scanner.rxBleScannerState.value
+                                        ?.scanIsInProgress ??
+                                    false) &&
+                                _isValidUuidInput()
                             ? _startScanning
                             : null,
                         child: const Text('Scan'),
                       ),
                       ElevatedButton(
-                        onPressed: scanning ? widget.scanner.stopScan : null,
+                        onPressed: (widget.scanner.rxBleScannerState.value
+                                    ?.scanIsInProgress ??
+                                false)
+                            ? widget.scanner.stopScan
+                            : null,
                         child: const Text('Stop'),
                       ),
                     ],
@@ -123,17 +122,27 @@ class BleDevPageState extends State<BleDevPage> {
                   ),
                   ListTile(
                     title: Text(
-                      !scanning
+                      !(widget.scanner.rxBleScannerState.value
+                                  ?.scanIsInProgress ??
+                              false)
                           ? 'Enter a UUID above and tap start to begin scanning'
                           : 'Tap a device to connect to it',
                     ),
-                    trailing: (scanning || discoveredDevices.isNotEmpty)
+                    trailing: ((widget.scanner.rxBleScannerState.value
+                                    ?.scanIsInProgress ??
+                                false) ||
+                            (widget.scanner.rxBleScannerState.value
+                                        ?.discoveredDevices ??
+                                    [])
+                                .isNotEmpty)
                         ? Text(
-                            'count: ${discoveredDevices.length}',
+                            'count: ${(widget.scanner.rxBleScannerState.value?.discoveredDevices ?? []).length}',
                           )
                         : null,
                   ),
-                  ...discoveredDevices
+                  ...(widget.scanner.rxBleScannerState.value
+                              ?.discoveredDevices ??
+                          [])
                       .map(
                         (device) => ListTile(
                           title: Text(device.name),
