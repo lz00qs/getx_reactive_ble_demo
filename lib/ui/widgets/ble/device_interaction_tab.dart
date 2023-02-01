@@ -3,6 +3,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import '../../../ble/ble_device_connector.dart';
 import '../../../ble/ble_device_interactor.dart';
+import 'characteristic_interaction_dialog.dart';
 
 class DeviceInteractionTab extends StatefulWidget {
   DeviceInteractionTab({
@@ -197,6 +198,12 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
         //           serviceId: characteristic.serviceId,
         //           deviceId: deviceId),
         //     )),
+        onTap: () => Get.dialog(
+          CharacteristicInteractionDialog(
+            deviceId: deviceId,
+            dCharacteristic: characteristic,
+          ),
+        ),
         title: Text(
           '${characteristic.characteristicId}\n(${_characteristicsSummary(characteristic)})',
           style: const TextStyle(
