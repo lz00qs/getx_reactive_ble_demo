@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/ble_dev_page.dart';
 import 'package:getx_reactive_ble_demo/ui/pages/ble_status_page.dart';
 import 'package:get/get.dart';

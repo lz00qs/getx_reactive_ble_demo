@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+
 class BleStatusPage extends StatelessWidget {
-  const BleStatusPage({required this.status,Key? key}) : super(key: key);
+  const BleStatusPage({required this.status, Key? key}) : super(key: key);
 
   final BleStatus? status;
-
-  // final BleStatus status = Get.arguments as BleStatus;
 
   String determineText(BleStatus status) {
     switch (status) {
