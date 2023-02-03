@@ -31,6 +31,7 @@ class BleDevPageState extends State<BleDevPage> {
   void dispose() {
     widget.scanner.stopScan();
     _uuidController.dispose();
+
     super.dispose();
   }
 
@@ -57,6 +58,15 @@ class BleDevPageState extends State<BleDevPage> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      List<DiscoveredDevice> discoveredDevices = [];
+
+      for (var element
+          in widget.scanner.rxBleScannerState.value.discoveredDevices) {
+        discoveredDevices.add(element);
+      }
+
+      discoveredDevices.sort((left, right) => right.rssi.compareTo(left.rssi));
+
       return Scaffold(
         appBar: AppBar(
           title: const Text('Scan for devices'),
@@ -72,8 +82,8 @@ class BleDevPageState extends State<BleDevPage> {
                   const Text('Service UUID (2, 4, 16 bytes):'),
                   TextField(
                     controller: _uuidController,
-                    enabled: !(widget.scanner.rxBleScannerState.value
-                            .scanIsInProgress),
+                    enabled: !(widget
+                        .scanner.rxBleScannerState.value.scanIsInProgress),
                     decoration: InputDecoration(
                         errorText:
                             _uuidController.text.isEmpty || _isValidUuidInput()
@@ -81,13 +91,12 @@ class BleDevPageState extends State<BleDevPage> {
                                 : 'Invalid UUID format'),
                     autocorrect: false,
                   ),
-                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
                         onPressed: !(widget.scanner.rxBleScannerState.value
-                                        .scanIsInProgress) &&
+                                    .scanIsInProgress) &&
                                 _isValidUuidInput()
                             ? _startScanning
                             : null,
@@ -95,12 +104,39 @@ class BleDevPageState extends State<BleDevPage> {
                       ),
                       ElevatedButton(
                         onPressed: (widget.scanner.rxBleScannerState.value
-                                    .scanIsInProgress)
+                                .scanIsInProgress)
                             ? widget.scanner.stopScan
                             : null,
                         child: const Text('Stop'),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    child: SwitchListTile(
+                      title: const Text("Verbose logging"),
+                      value: widget.bleLogger.verboseLogging,
+                      onChanged: (_) =>
+                          setState(widget.bleLogger.toggleVerboseLogging),
+                    ),
+                  ),
+                  SizedBox(
+                    child: ListTile(
+                      title: Text(
+                        !(widget.scanner.rxBleScannerState.value
+                                .scanIsInProgress)
+                            ? 'Enter a UUID above and tap start to begin scanning'
+                            : 'Tap a device to connect to it',
+                      ),
+                      trailing: ((widget.scanner.rxBleScannerState.value
+                                  .scanIsInProgress) ||
+                              (widget.scanner.rxBleScannerState.value
+                                      .discoveredDevices)
+                                  .isNotEmpty)
+                          ? Text(
+                              'count: ${discoveredDevices.length}',
+                            )
+                          : null,
+                    ),
                   ),
                 ],
               ),
@@ -109,31 +145,7 @@ class BleDevPageState extends State<BleDevPage> {
             Flexible(
               child: ListView(
                 children: [
-                  SwitchListTile(
-                    title: const Text("Verbose logging"),
-                    value: widget.bleLogger.verboseLogging,
-                    onChanged: (_) =>
-                        setState(widget.bleLogger.toggleVerboseLogging),
-                  ),
-                  ListTile(
-                    title: Text(
-                      !(widget.scanner.rxBleScannerState.value
-                                  .scanIsInProgress)
-                          ? 'Enter a UUID above and tap start to begin scanning'
-                          : 'Tap a device to connect to it',
-                    ),
-                    trailing: ((widget.scanner.rxBleScannerState.value
-                                    .scanIsInProgress) ||
-                            (widget.scanner.rxBleScannerState.value
-                                        .discoveredDevices)
-                                .isNotEmpty)
-                        ? Text(
-                            'count: ${(widget.scanner.rxBleScannerState.value.discoveredDevices).length}',
-                          )
-                        : null,
-                  ),
-                  ...(widget.scanner.rxBleScannerState.value
-                              .discoveredDevices)
+                  ...(discoveredDevices)
                       .map(
                         (device) => ListTile(
                           title: Text(device.name),
