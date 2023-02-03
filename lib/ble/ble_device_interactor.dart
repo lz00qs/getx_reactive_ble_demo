@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
+import 'ble_logger.dart';
 
 class BleDeviceInteractor extends GetxController {
   BleDeviceInteractor({
@@ -15,15 +16,13 @@ class BleDeviceInteractor extends GetxController {
     required Future<void> Function(QualifiedCharacteristic characteristic,
             {required List<int> value})
         writeWithOutResponse,
-    required void Function(String message) logMessage,
     required Stream<List<int>> Function(QualifiedCharacteristic characteristic)
         subscribeToCharacteristic,
   })  : _bleDiscoverServices = bleDiscoverServices,
         _readCharacteristic = readCharacteristic,
         _writeWithResponse = writeWithResponse,
         _writeWithoutResponse = writeWithOutResponse,
-        _subScribeToCharacteristic = subscribeToCharacteristic,
-        _logMessage = logMessage;
+        _subScribeToCharacteristic = subscribeToCharacteristic;
 
   final Future<List<DiscoveredService>> Function(String deviceId)
       _bleDiscoverServices;
@@ -40,7 +39,8 @@ class BleDeviceInteractor extends GetxController {
   final Stream<List<int>> Function(QualifiedCharacteristic characteristic)
       _subScribeToCharacteristic;
 
-  final void Function(String message) _logMessage;
+  final void Function(String message) _logMessage =
+      Get.find<BleLogger>().addToLog;
 
   Future<List<DiscoveredService>> discoverServices(String deviceId) async {
     try {

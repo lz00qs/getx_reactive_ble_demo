@@ -10,13 +10,10 @@ import '../../ble/ble_status_monitor.dart';
 class SplashPage extends StatelessWidget {
   SplashPage({
     required this.ble,
-    required this.bleLogger,
     Key? key,
   }) : super(key: key);
 
   final FlutterReactiveBle ble;
-
-  final BleLogger bleLogger;
 
   final monitor = Get.find<BleStatusMonitor>();
 
@@ -24,9 +21,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       if (monitor.rxBleStatus.value == BleStatus.ready) {
-        return BleDevPage(
-          bleLogger: bleLogger,
-        );
+        return BleDevPage();
       } else {
         return BleStatusPage(status: monitor.rxBleStatus.value);
       }

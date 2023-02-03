@@ -8,11 +8,10 @@ import '../../ble/ble_scanner.dart';
 class BleDevPage extends StatefulWidget {
   BleDevPage({
     super.key,
-    required this.bleLogger,
   });
 
   final BleScanner scanner = Get.find<BleScanner>();
-  final BleLogger bleLogger;
+  final BleLogger bleLogger = Get.find<BleLogger>();
 
   @override
   BleDevPageState createState() => BleDevPageState();

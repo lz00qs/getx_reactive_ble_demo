@@ -13,31 +13,25 @@ import 'ble/ble_status_monitor.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final ble = FlutterReactiveBle();
-  final bleLogger = Get.put(BleLogger(ble: ble));
-  // final _scanner = BleScanner(ble: _ble, logMessage: _bleLogger.addToLog);
+  Get.put(BleLogger(ble: ble));
   Get.put(BleStatusMonitor(ble));
-  Get.put(BleScanner(ble: ble, logMessage: bleLogger.addToLog));
-  Get.put(BleDeviceConnector(ble: ble, logMessage: bleLogger.addToLog));
+  Get.put(BleScanner(ble: ble));
+  Get.put(BleDeviceConnector(ble: ble));
   Get.put(BleDeviceInteractor(
       bleDiscoverServices: ble.discoverServices,
       readCharacteristic: ble.readCharacteristic,
       writeWithResponse: ble.writeCharacteristicWithResponse,
       writeWithOutResponse: ble.writeCharacteristicWithoutResponse,
-      subscribeToCharacteristic: ble.subscribeToCharacteristic,
-      logMessage: bleLogger.addToLog));
+      subscribeToCharacteristic: ble.subscribeToCharacteristic));
   runApp(MyApp(
     ble: ble,
-    bleLogger: bleLogger,
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({required this.ble, required this.bleLogger, Key? key})
-      : super(key: key);
+  const MyApp({required this.ble, Key? key}) : super(key: key);
 
   final FlutterReactiveBle ble;
-
-  final BleLogger bleLogger;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +39,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: true,
       home: SplashPage(
         ble: ble,
-        bleLogger: bleLogger,
       ),
       getPages: AppRoutes.routes,
     );

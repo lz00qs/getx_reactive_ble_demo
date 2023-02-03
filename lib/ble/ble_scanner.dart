@@ -4,17 +4,18 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'package:meta/meta.dart';
 
-class BleScanner extends GetxController{
+import 'ble_logger.dart';
+
+class BleScanner extends GetxController {
   BleScanner({
     required FlutterReactiveBle ble,
-    required Function(String message) logMessage,
-  })  : _ble = ble,
-        _logMessage = logMessage{
+  }) : _ble = ble {
     rxBleScannerState.bindStream(_stateStreamController.stream);
   }
 
   final FlutterReactiveBle _ble;
-  final void Function(String message) _logMessage;
+  final void Function(String message) _logMessage =
+      Get.find<BleLogger>().addToLog;
   final StreamController<BleScannerState> _stateStreamController =
       StreamController();
 

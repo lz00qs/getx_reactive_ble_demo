@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
+import 'ble_logger.dart';
 
 class BleDeviceConnector extends GetxController {
   BleDeviceConnector({
     required FlutterReactiveBle ble,
-    required Function(String message) logMessage,
-  })  : _ble = ble,
-        _logMessage = logMessage {
+  }) : _ble = ble {
     rxBleConnectionState.bindStream(_deviceConnectionController.stream);
   }
 
   final FlutterReactiveBle _ble;
-  final void Function(String message) _logMessage;
+  final void Function(String message) _logMessage =
+      Get.find<BleLogger>().addToLog;
 
   final rxBleConnectionState = Rx<ConnectionStateUpdate?>(null);
 
