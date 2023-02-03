@@ -23,6 +23,8 @@ class CharacteristicInteractionDialog extends StatefulWidget {
 
   final String deviceId;
 
+  final BleDeviceInteractor interactor = Get.find<BleDeviceInteractor>();
+
   @override
   CharacteristicInteractionDialogState createState() =>
       CharacteristicInteractionDialogState();
@@ -30,18 +32,48 @@ class CharacteristicInteractionDialog extends StatefulWidget {
 
 class CharacteristicInteractionDialogState
     extends State<CharacteristicInteractionDialog> {
-  late String readOutput;
-  late String writeOutput;
-  late String subscribeOutput;
-  late TextEditingController textEditingController;
+  final RxString readOutput = ''.obs;
+  final RxString writeOutput = ''.obs;
+  final RxString subscribeOutput = ''.obs;
+  final TextEditingController textEditingController = TextEditingController();
+
+  final subscribeStream = Rx<List<int>>([]);
 
   @override
   void initState() {
-    readOutput = '';
-    writeOutput = '';
-    subscribeOutput = '';
-    textEditingController = TextEditingController();
     super.initState();
+  }
+
+  Future<void> subscribeCharacteristic() async {
+    subscribeStream.bindStream(
+        widget.interactor.subScribeToCharacteristic(widget.qCharacteristic));
+    subscribeOutput.value = subscribeStream.value.toString();
+  }
+
+  Future<void> readCharacteristic() async {
+    readOutput.value =
+        (await widget.interactor.readCharacteristic(widget.qCharacteristic))
+            .toString();
+  }
+
+  List<int> _parseInput() => textEditingController.text
+      .split(',')
+      .map(
+        int.parse,
+      )
+      .toList();
+
+  Future<void> writeCharacteristicWithResponse() async {
+    await widget.interactor.writeCharacteristicWithResponse(
+        widget.qCharacteristic, _parseInput());
+    writeOutput.value = 'Ok';
+  }
+
+  Future<void> writeCharacteristicWithoutResponse() async {
+    await widget.interactor.writeCharacteristicWithoutResponse(
+        widget.qCharacteristic, _parseInput());
+
+    writeOutput.value = 'Done';
   }
 
   Widget get divider => const Padding(
@@ -60,13 +92,12 @@ class CharacteristicInteractionDialogState
           children: [
             sectionHeader('Read characteristic'),
             ElevatedButton(
-              // onPressed: readCharacteristic,
-              onPressed: () => print('read'),
+              onPressed: readCharacteristic,
               child: const Text('Read'),
             ),
           ],
         ),
-        Text('Output: '),
+        Obx(() => Text('Output: ${readOutput.value}')),
         divider,
       ];
 
@@ -90,21 +121,18 @@ class CharacteristicInteractionDialogState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ElevatedButton(
-              // onPressed: writeCharacteristicWithResponse,
-              onPressed: () => print('test'),
+              onPressed: writeCharacteristicWithResponse,
               child: const Text('ACK'),
             ),
             ElevatedButton(
-              // onPressed: writeCharacteristicWithoutResponse,
-              onPressed: () => print('test'),
+              onPressed: writeCharacteristicWithoutResponse,
               child: const Text('UnACK'),
             ),
           ],
         ),
         Padding(
-          padding: const EdgeInsetsDirectional.only(top: 8.0),
-          child: Text('Output: $writeOutput'),
-        ),
+            padding: const EdgeInsetsDirectional.only(top: 8.0),
+            child: Obx(() => Text('Output: $writeOutput'))),
         divider,
       ];
 
@@ -114,13 +142,12 @@ class CharacteristicInteractionDialogState
           children: [
             sectionHeader('Subscribe / notify'),
             ElevatedButton(
-              onPressed: () => print('test'),
-              // onPressed: subscribeCharacteristic,
+              onPressed: subscribeCharacteristic,
               child: const Text('Subscribe'),
             ),
           ],
         ),
-        Text('Output: $subscribeOutput'),
+        Obx(() => Text('Output: $subscribeOutput')),
         divider,
       ];
 
