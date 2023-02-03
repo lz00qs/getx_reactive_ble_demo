@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'ble_logger.dart';
@@ -49,7 +48,7 @@ class BleDeviceInteractor extends GetxController {
       _logMessage('Discovering services finished');
       return result;
     } on Exception catch (e) {
-      _logMessage('Error occured when discovering services: $e');
+      _logMessage('Error occurred when discovering services: $e');
       rethrow;
     }
   }
@@ -63,7 +62,7 @@ class BleDeviceInteractor extends GetxController {
       return result;
     } on Exception catch (e, s) {
       _logMessage(
-        'Error occured when reading ${characteristic.characteristicId} : $e',
+        'Error occurred when reading ${characteristic.characteristicId} : $e',
       );
       // ignore: avoid_print
       print(s);
@@ -71,7 +70,7 @@ class BleDeviceInteractor extends GetxController {
     }
   }
 
-  Future<void> writeCharacterisiticWithResponse(
+  Future<void> writeCharacteristicWithResponse(
       QualifiedCharacteristic characteristic, List<int> value) async {
     try {
       _logMessage(
@@ -79,7 +78,7 @@ class BleDeviceInteractor extends GetxController {
       await _writeWithResponse(characteristic, value: value);
     } on Exception catch (e, s) {
       _logMessage(
-        'Error occured when writing ${characteristic.characteristicId} : $e',
+        'Error occurred when writing ${characteristic.characteristicId} : $e',
       );
       // ignore: avoid_print
       print(s);
@@ -87,7 +86,7 @@ class BleDeviceInteractor extends GetxController {
     }
   }
 
-  Future<void> writeCharacterisiticWithoutResponse(
+  Future<void> writeCharacteristicWithoutResponse(
       QualifiedCharacteristic characteristic, List<int> value) async {
     try {
       await _writeWithoutResponse(characteristic, value: value);
@@ -95,7 +94,7 @@ class BleDeviceInteractor extends GetxController {
           'Write without response value: $value to ${characteristic.characteristicId}');
     } on Exception catch (e, s) {
       _logMessage(
-        'Error occured when writing ${characteristic.characteristicId} : $e',
+        'Error occurred when writing ${characteristic.characteristicId} : $e',
       );
       // ignore: avoid_print
       print(s);

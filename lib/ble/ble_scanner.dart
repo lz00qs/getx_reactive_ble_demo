@@ -63,7 +63,6 @@ class BleScanner extends GetxController {
     rxBleScannerState.close();
     await _stateStreamController.close();
   }
-
 }
 
 @immutable

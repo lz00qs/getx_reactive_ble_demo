@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-
 import '../../../ble/ble_device_interactor.dart';
 
 class CharacteristicInteractionDialog extends StatefulWidget {

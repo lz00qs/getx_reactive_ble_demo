@@ -151,11 +151,6 @@ class BleDevPageState extends State<BleDevPage> {
                             widget.scanner.stopScan();
                             await Get.toNamed('/bleDeviceDetailPage',
                                 arguments: device);
-                            // await Navigator.push<void>(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (_) =>
-                            //             DeviceDetailScreen(device: device)));
                           },
                         ),
                       )
