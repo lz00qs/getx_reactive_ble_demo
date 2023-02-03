@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
 import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
-
 import '../../ble/ble_scanner.dart';
 
 class BleDevPage extends StatefulWidget {
@@ -74,8 +73,7 @@ class BleDevPageState extends State<BleDevPage> {
                   TextField(
                     controller: _uuidController,
                     enabled: !(widget.scanner.rxBleScannerState.value
-                            ?.scanIsInProgress ??
-                        false),
+                            .scanIsInProgress),
                     decoration: InputDecoration(
                         errorText:
                             _uuidController.text.isEmpty || _isValidUuidInput()
@@ -89,8 +87,7 @@ class BleDevPageState extends State<BleDevPage> {
                     children: [
                       ElevatedButton(
                         onPressed: !(widget.scanner.rxBleScannerState.value
-                                        ?.scanIsInProgress ??
-                                    false) &&
+                                        .scanIsInProgress) &&
                                 _isValidUuidInput()
                             ? _startScanning
                             : null,
@@ -98,8 +95,7 @@ class BleDevPageState extends State<BleDevPage> {
                       ),
                       ElevatedButton(
                         onPressed: (widget.scanner.rxBleScannerState.value
-                                    ?.scanIsInProgress ??
-                                false)
+                                    .scanIsInProgress)
                             ? widget.scanner.stopScan
                             : null,
                         child: const Text('Stop'),
@@ -122,26 +118,22 @@ class BleDevPageState extends State<BleDevPage> {
                   ListTile(
                     title: Text(
                       !(widget.scanner.rxBleScannerState.value
-                                  ?.scanIsInProgress ??
-                              false)
+                                  .scanIsInProgress)
                           ? 'Enter a UUID above and tap start to begin scanning'
                           : 'Tap a device to connect to it',
                     ),
                     trailing: ((widget.scanner.rxBleScannerState.value
-                                    ?.scanIsInProgress ??
-                                false) ||
+                                    .scanIsInProgress) ||
                             (widget.scanner.rxBleScannerState.value
-                                        ?.discoveredDevices ??
-                                    [])
+                                        .discoveredDevices)
                                 .isNotEmpty)
                         ? Text(
-                            'count: ${(widget.scanner.rxBleScannerState.value?.discoveredDevices ?? []).length}',
+                            'count: ${(widget.scanner.rxBleScannerState.value.discoveredDevices).length}',
                           )
                         : null,
                   ),
                   ...(widget.scanner.rxBleScannerState.value
-                              ?.discoveredDevices ??
-                          [])
+                              .discoveredDevices)
                       .map(
                         (device) => ListTile(
                           title: Text(device.name),

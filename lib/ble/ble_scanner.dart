@@ -21,7 +21,7 @@ class BleScanner extends GetxController {
 
   StreamSubscription? _subscription;
 
-  final rxBleScannerState = Rx<BleScannerState?>(null);
+  final rxBleScannerState = Rx<BleScannerState>(const BleScannerState(discoveredDevices: [], scanIsInProgress: false));
 
   final _devices = <DiscoveredDevice>[];
 
