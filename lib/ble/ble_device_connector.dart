@@ -56,7 +56,10 @@ class BleDeviceConnector extends GetxController {
     }
   }
 
-  Future<void> streamDispose() async {
+  @override
+  Future<void> onClose() async {
+    rxBleConnectionState.close();
     await _deviceConnectionController.close();
+    super.onClose();
   }
 }
