@@ -5,7 +5,7 @@ import '../../../ble/ble_device_connector.dart';
 import '../../../ble/ble_device_interactor.dart';
 import 'characteristic_interaction_dialog.dart';
 
-class DeviceInteractionTab extends StatefulWidget {
+class DeviceInteractionTab extends StatelessWidget {
   DeviceInteractionTab({
     required this.discoveredDevice,
     Key? key,
@@ -23,11 +23,6 @@ class DeviceInteractionTab extends StatefulWidget {
   late final BleDevice bleDevice;
 
   @override
-  DeviceInteractionTabState createState() => DeviceInteractionTabState();
-}
-
-class DeviceInteractionTabState extends State<DeviceInteractionTab> {
-  @override
   Widget build(BuildContext context) => Obx(() => CustomScrollView(
         slivers: [
           SliverList(
@@ -37,14 +32,14 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                   padding: const EdgeInsetsDirectional.only(
                       top: 8.0, bottom: 16.0, start: 16.0),
                   child: Text(
-                    "MAC: ${widget.discoveredDevice.id}",
+                    "MAC: ${discoveredDevice.id}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.only(start: 16.0),
                   child: Text(
-                    "Status: ${widget.bleDevice.deviceConnector.rxBleConnectionState.value.connectionState}",
+                    "Status: ${bleDevice.deviceConnector.rxBleConnectionState.value.connectionState}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -54,50 +49,47 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       ElevatedButton(
-                        onPressed: !((widget
-                                    .bleDevice
+                        onPressed: !((bleDevice
                                     .deviceConnector
                                     .rxBleConnectionState
                                     .value
                                     .connectionState) ==
                                 DeviceConnectionState.connected)
-                            ? widget.bleDevice.connect
+                            ? bleDevice.connect
                             : null,
                         child: const Text("Connect"),
                       ),
                       ElevatedButton(
-                        onPressed: (widget
-                                    .bleDevice
+                        onPressed: (bleDevice
                                     .deviceConnector
                                     .rxBleConnectionState
                                     .value
                                     .connectionState) ==
                                 DeviceConnectionState.connected
-                            ? widget.bleDevice.disconnect
+                            ? bleDevice.disconnect
                             : null,
                         child: const Text("Disconnect"),
                       ),
                       ElevatedButton(
-                        onPressed: (widget
-                                    .bleDevice
+                        onPressed: (bleDevice
                                     .deviceConnector
                                     .rxBleConnectionState
                                     .value
                                     .connectionState) ==
                                 DeviceConnectionState.connected
-                            ? widget.bleDevice.discoverServices
+                            ? bleDevice.discoverServices
                             : null,
                         child: const Text("Discover Services"),
                       ),
                     ],
                   ),
                 ),
-                if ((widget.bleDevice.deviceConnector.rxBleConnectionState.value
+                if ((bleDevice.deviceConnector.rxBleConnectionState.value
                         .connectionState) ==
                     DeviceConnectionState.connected)
                   _ServiceDiscoveryList(
-                    deviceMAC: widget.bleDevice.deviceMAC,
-                    discoveredServices: widget.bleDevice.rxDiscoveredServices,
+                    deviceMAC: bleDevice.deviceMAC,
+                    discoveredServices: bleDevice.rxDiscoveredServices,
                   )
               ],
             ),
@@ -145,9 +137,6 @@ class _ServiceDiscoveryList extends StatelessWidget {
 
   final String deviceMAC;
   final RxList<DiscoveredService> discoveredServices;
-
-  // class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
-  // late final List<int> _expandedItems;
   final RxList<int> _expandedItems = <int>[].obs;
 
   String _characteristicsSummary(DiscoveredCharacteristic c) {
