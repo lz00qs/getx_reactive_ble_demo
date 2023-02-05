@@ -49,7 +49,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                 Padding(
                   padding: const EdgeInsetsDirectional.only(start: 16.0),
                   child: Text(
-                    "Status: ${widget.bleDevice.deviceConnector.rxBleConnectionState.value?.connectionState ?? DeviceConnectionState.disconnected}",
+                    "Status: ${widget.bleDevice.deviceConnector.rxBleConnectionState.value.connectionState}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -64,8 +64,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                                         .deviceConnector
                                         .rxBleConnectionState
                                         .value
-                                        ?.connectionState ??
-                                    DeviceConnectionState.disconnected) ==
+                                        .connectionState) ==
                                 DeviceConnectionState.connected)
                             ? widget.bleDevice.connect
                             : null,
@@ -77,8 +76,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                                         .deviceConnector
                                         .rxBleConnectionState
                                         .value
-                                        ?.connectionState ??
-                                    DeviceConnectionState.disconnected) ==
+                                        .connectionState) ==
                                 DeviceConnectionState.connected
                             ? widget.bleDevice.disconnect
                             : null,
@@ -89,9 +87,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                                         .bleDevice
                                         .deviceConnector
                                         .rxBleConnectionState
-                                        .value
-                                        ?.connectionState ??
-                                    DeviceConnectionState.disconnected) ==
+                                        .value.connectionState) ==
                                 DeviceConnectionState.connected
                             ? widget.bleDevice.discoverServices
                             : null,
@@ -101,8 +97,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                   ),
                 ),
                 if ((widget.bleDevice.deviceConnector.rxBleConnectionState.value
-                            ?.connectionState ??
-                        DeviceConnectionState.disconnected) ==
+                            .connectionState) ==
                     DeviceConnectionState.connected)
                   _ServiceDiscoveryList(
                     deviceId: widget.bleDevice.id,

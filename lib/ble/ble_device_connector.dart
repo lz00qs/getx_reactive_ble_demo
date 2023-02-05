@@ -14,7 +14,11 @@ class BleDeviceConnector extends GetxController {
   final void Function(String message) _logMessage =
       Get.find<BleLogger>().addToLog;
 
-  final rxBleConnectionState = Rx<ConnectionStateUpdate?>(null);
+  final rxBleConnectionState = Rx<ConnectionStateUpdate>(
+      const ConnectionStateUpdate(
+          deviceId: "",
+          connectionState: DeviceConnectionState.disconnected,
+          failure: null));
 
   final _deviceConnectionController = StreamController<ConnectionStateUpdate>();
 
