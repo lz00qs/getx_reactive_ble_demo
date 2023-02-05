@@ -10,7 +10,7 @@ class DeviceInteractionTab extends StatelessWidget {
     required this.discoveredDevice,
     Key? key,
   }) : super(key: key) {
-    bleDevice = BleDevice(
+    bleDevice = BleDeviceController(
       deviceMAC: discoveredDevice.id,
       deviceConnector: connector,
       fDiscoverServices: () => interactor.discoverServices(discoveredDevice.id),
@@ -20,7 +20,7 @@ class DeviceInteractionTab extends StatelessWidget {
   final DiscoveredDevice discoveredDevice;
   final BleDeviceInteractor interactor = Get.find<BleDeviceInteractor>();
   final BleDeviceConnector connector = Get.find<BleDeviceConnector>();
-  late final BleDevice bleDevice;
+  late final BleDeviceController bleDevice;
 
   @override
   Widget build(BuildContext context) => Obx(() => CustomScrollView(
@@ -98,8 +98,8 @@ class DeviceInteractionTab extends StatelessWidget {
       ));
 }
 
-class BleDevice extends GetxController {
-  BleDevice({
+class BleDeviceController extends GetxController {
+  BleDeviceController({
     required this.deviceMAC,
     required this.deviceConnector,
     required this.fDiscoverServices,
