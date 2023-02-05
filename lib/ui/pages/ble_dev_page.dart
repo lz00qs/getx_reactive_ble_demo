@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
 import '../../ble/ble_scanner.dart';
 
+
+/// 蓝牙设备列表页面
 class BleDevPage extends StatefulWidget {
   BleDevPage({
     super.key,
@@ -35,6 +37,7 @@ class _BleScanFilterController extends GetxController {
   }
 }
 
+/// 蓝牙设备列表页面状态
 class BleDevPageState extends State<BleDevPage> {
   final _BleScanFilterController _filter = Get.put(_BleScanFilterController());
 
@@ -96,6 +99,7 @@ class BleDevPageState extends State<BleDevPage> {
       discoveredDevices.sort((left, right) => right.rssi.compareTo(left.rssi));
 
       return Scaffold(
+        // 防止键盘打开时页面内容报 bottom space not enough 错误
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const Text('Scan for devices'),

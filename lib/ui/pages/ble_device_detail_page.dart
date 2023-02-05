@@ -12,6 +12,7 @@ class BleDeviceDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 拦截返回事件，在返回的时候断开连接
     return WillPopScope(
       onWillPop: () async {
         connector.disconnect(device.id);

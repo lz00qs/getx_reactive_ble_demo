@@ -27,10 +27,10 @@ class DeviceInteractionTab extends StatefulWidget {
 }
 
 class DeviceInteractionTabState extends State<DeviceInteractionTab> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) => Obx(() => CustomScrollView(
