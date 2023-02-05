@@ -27,11 +27,6 @@ class DeviceInteractionTab extends StatefulWidget {
 }
 
 class DeviceInteractionTabState extends State<DeviceInteractionTab> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) => Obx(() => CustomScrollView(
         slivers: [
@@ -60,11 +55,11 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: !((widget
-                                        .bleDevice
-                                        .deviceConnector
-                                        .rxBleConnectionState
-                                        .value
-                                        .connectionState) ==
+                                    .bleDevice
+                                    .deviceConnector
+                                    .rxBleConnectionState
+                                    .value
+                                    .connectionState) ==
                                 DeviceConnectionState.connected)
                             ? widget.bleDevice.connect
                             : null,
@@ -72,11 +67,11 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                       ),
                       ElevatedButton(
                         onPressed: (widget
-                                        .bleDevice
-                                        .deviceConnector
-                                        .rxBleConnectionState
-                                        .value
-                                        .connectionState) ==
+                                    .bleDevice
+                                    .deviceConnector
+                                    .rxBleConnectionState
+                                    .value
+                                    .connectionState) ==
                                 DeviceConnectionState.connected
                             ? widget.bleDevice.disconnect
                             : null,
@@ -84,10 +79,11 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                       ),
                       ElevatedButton(
                         onPressed: (widget
-                                        .bleDevice
-                                        .deviceConnector
-                                        .rxBleConnectionState
-                                        .value.connectionState) ==
+                                    .bleDevice
+                                    .deviceConnector
+                                    .rxBleConnectionState
+                                    .value
+                                    .connectionState) ==
                                 DeviceConnectionState.connected
                             ? widget.bleDevice.discoverServices
                             : null,
@@ -100,7 +96,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                         .connectionState) ==
                     DeviceConnectionState.connected)
                   _ServiceDiscoveryList(
-                    deviceId: widget.bleDevice.deviceMAC,
+                    deviceMAC: widget.bleDevice.deviceMAC,
                     discoveredServices: widget.bleDevice.rxDiscoveredServices,
                   )
               ],
@@ -138,9 +134,9 @@ class BleDevice extends GetxController {
   }
 }
 
-class _ServiceDiscoveryList extends StatefulWidget {
-  const _ServiceDiscoveryList({
-    required this.deviceId,
+class _ServiceDiscoveryList extends StatelessWidget {
+  _ServiceDiscoveryList({
+    required this.deviceMAC,
     required this.discoveredServices,
     Key? key,
   }) : super(key: key);
@@ -148,18 +144,9 @@ class _ServiceDiscoveryList extends StatefulWidget {
   final String deviceMAC;
   final RxList<DiscoveredService> discoveredServices;
 
-  @override
-  _ServiceDiscoveryListState createState() => _ServiceDiscoveryListState();
-}
-
-class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
-  late final List<int> _expandedItems;
-
-  @override
-  void initState() {
-    _expandedItems = [];
-    super.initState();
-  }
+  // class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
+  // late final List<int> _expandedItems;
+  final RxList<int> _expandedItems = <int>[].obs;
 
   String _characteristicsSummary(DiscoveredCharacteristic c) {
     final props = <String>[];
@@ -183,16 +170,8 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
   }
 
   Widget _characteristicTile(
-          DiscoveredCharacteristic characteristic, String deviceId) =>
+          DiscoveredCharacteristic characteristic, String deviceMAC) =>
       ListTile(
-        // onTap: () => showDialog<void>(
-        //     context: context,
-        //     builder: (context) => CharacteristicInteractionDialog(
-        //       characteristic: QualifiedCharacteristic(
-        //           characteristicId: characteristic.characteristicId,
-        //           serviceId: characteristic.serviceId,
-        //           deviceId: deviceId),
-        //     )),
         onTap: () => Get.dialog(
           CharacteristicInteractionDialog(
             deviceMAC: deviceMAC,
@@ -210,7 +189,7 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
   List<ExpansionPanel> buildPanels() {
     final panels = <ExpansionPanel>[];
 
-    widget.discoveredServices.asMap().forEach(
+    discoveredServices.asMap().forEach(
           (index, service) => panels.add(
             ExpansionPanel(
               body: Column(
@@ -252,30 +231,25 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Obx(() => widget.discoveredServices.isEmpty
-          ? const SizedBox()
-          : Padding(
-              padding: const EdgeInsetsDirectional.only(
-                top: 20.0,
-                start: 20.0,
-                end: 20.0,
-              ),
-              child: ExpansionPanelList(
-                expansionCallback: (int index, bool isExpanded) {
-                  setState(() {
-                    setState(() {
-                      if (isExpanded) {
-                        _expandedItems.remove(index);
-                      } else {
-                        _expandedItems.add(index);
-                      }
-                    });
-                  });
-                },
-                children: [
-                  ...buildPanels(),
-                ],
-              ),
-            ));
+  Widget build(BuildContext context) => Obx(() => discoveredServices.isEmpty
+      ? const SizedBox()
+      : Padding(
+          padding: const EdgeInsetsDirectional.only(
+            top: 20.0,
+            start: 20.0,
+            end: 20.0,
+          ),
+          child: ExpansionPanelList(
+            expansionCallback: (int index, bool isExpanded) {
+              if (isExpanded) {
+                _expandedItems.remove(index);
+              } else {
+                _expandedItems.add(index);
+              }
+            },
+            children: [
+              ...buildPanels(),
+            ],
+          ),
+        ));
 }
