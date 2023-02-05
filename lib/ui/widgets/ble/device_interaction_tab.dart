@@ -121,6 +121,7 @@ class BleDevice extends GetxController {
   final Future<List<DiscoveredService>> Function() fDiscoverServices;
 
   void discoverServices() async {
+    rxDiscoveredServices.value = [];
     final result = await fDiscoverServices();
     rxDiscoveredServices.value = result;
   }
@@ -130,6 +131,7 @@ class BleDevice extends GetxController {
   }
 
   void disconnect() {
+    rxDiscoveredServices.value = [];
     deviceConnector.disconnect(deviceMAC);
   }
 }
