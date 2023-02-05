@@ -10,9 +10,7 @@ class BleLogger extends GetxController {
   final FlutterReactiveBle _ble;
   final Rx<List<String>> rxMessages = Rx<List<String>>([]);
   final DateFormat formatter = DateFormat('HH:mm:ss.SSS');
-
-  // List<String> get messages => _logMessages;
-
+  final RxBool rxVerboseLogging = false.obs;
 
   void addToLog(String message) {
     final now = DateTime.now();
@@ -21,8 +19,11 @@ class BleLogger extends GetxController {
 
   void clearLogs() => rxMessages.value.clear();
 
-  bool get verboseLogging => _ble.logLevel == LogLevel.verbose;
-
-  void toggleVerboseLogging() =>
-      _ble.logLevel = verboseLogging ? LogLevel.none : LogLevel.verbose;
+  void verboseLoggingUpdate() {
+    if (rxVerboseLogging.value) {
+      _ble.logLevel = LogLevel.verbose;
+    } else {
+      _ble.logLevel = LogLevel.none;
+    }
+  }
 }
