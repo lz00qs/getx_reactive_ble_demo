@@ -11,7 +11,7 @@ class DeviceInteractionTab extends StatefulWidget {
     Key? key,
   }) : super(key: key) {
     bleDevice = BleDevice(
-      id: discoveredDevice.id,
+      deviceMAC: discoveredDevice.id,
       deviceConnector: connector,
       fDiscoverServices: () => interactor.discoverServices(discoveredDevice.id),
     );
@@ -42,7 +42,7 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                   padding: const EdgeInsetsDirectional.only(
                       top: 8.0, bottom: 16.0, start: 16.0),
                   child: Text(
-                    "ID: ${widget.discoveredDevice.id}",
+                    "MAC: ${widget.discoveredDevice.id}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -97,10 +97,10 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
                   ),
                 ),
                 if ((widget.bleDevice.deviceConnector.rxBleConnectionState.value
-                            .connectionState) ==
+                        .connectionState) ==
                     DeviceConnectionState.connected)
                   _ServiceDiscoveryList(
-                    deviceId: widget.bleDevice.id,
+                    deviceId: widget.bleDevice.deviceMAC,
                     discoveredServices: widget.bleDevice.rxDiscoveredServices,
                   )
               ],
@@ -112,12 +112,12 @@ class DeviceInteractionTabState extends State<DeviceInteractionTab> {
 
 class BleDevice extends GetxController {
   BleDevice({
-    required this.id,
+    required this.deviceMAC,
     required this.deviceConnector,
     required this.fDiscoverServices,
   });
 
-  final String id;
+  final String deviceMAC;
   final RxList<DiscoveredService> rxDiscoveredServices =
       <DiscoveredService>[].obs;
 
@@ -130,11 +130,11 @@ class BleDevice extends GetxController {
   }
 
   void connect() {
-    deviceConnector.connect(id);
+    deviceConnector.connect(deviceMAC);
   }
 
   void disconnect() {
-    deviceConnector.disconnect(id);
+    deviceConnector.disconnect(deviceMAC);
   }
 }
 
@@ -145,7 +145,7 @@ class _ServiceDiscoveryList extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  final String deviceId;
+  final String deviceMAC;
   final RxList<DiscoveredService> discoveredServices;
 
   @override
@@ -195,7 +195,7 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
         //     )),
         onTap: () => Get.dialog(
           CharacteristicInteractionDialog(
-            deviceId: deviceId,
+            deviceMAC: deviceMAC,
             dCharacteristic: characteristic,
           ),
         ),
@@ -232,7 +232,7 @@ class _ServiceDiscoveryListState extends State<_ServiceDiscoveryList> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) => _characteristicTile(
                       service.characteristics[index],
-                      widget.deviceId,
+                      deviceMAC,
                     ),
                     itemCount: service.characteristicIds.length,
                   ),

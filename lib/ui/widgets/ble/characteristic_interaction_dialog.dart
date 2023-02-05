@@ -6,14 +6,14 @@ import '../../../ble/ble_device_interactor.dart';
 
 class CharacteristicInteractionDialog extends StatefulWidget {
   CharacteristicInteractionDialog({
-    required this.deviceId,
+    required this.deviceMAC,
     required this.dCharacteristic,
     Key? key,
   }) : super(key: key) {
     qCharacteristic = QualifiedCharacteristic(
       characteristicId: dCharacteristic.characteristicId,
       serviceId: dCharacteristic.serviceId,
-      deviceId: deviceId,
+      deviceId: deviceMAC,
     );
   }
 
@@ -21,7 +21,7 @@ class CharacteristicInteractionDialog extends StatefulWidget {
 
   final DiscoveredCharacteristic dCharacteristic;
 
-  final String deviceId;
+  final String deviceMAC;
 
   final BleDeviceInteractor interactor = Get.find<BleDeviceInteractor>();
 

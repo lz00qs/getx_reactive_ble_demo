@@ -25,22 +25,22 @@ class BleDeviceConnector extends GetxController {
   // ignore: cancel_subscriptions
   late StreamSubscription<ConnectionStateUpdate> _connection;
 
-  Future<void> connect(String deviceId) async {
-    _logMessage('Start connecting to $deviceId');
-    _connection = _ble.connectToDevice(id: deviceId).listen(
+  Future<void> connect(String deviceMAC) async {
+    _logMessage('Start connecting to $deviceMAC');
+    _connection = _ble.connectToDevice(id: deviceMAC).listen(
       (update) {
         _logMessage(
-            'ConnectionState for device $deviceId : ${update.connectionState}');
+            'ConnectionState for device $deviceMAC : ${update.connectionState}');
         _deviceConnectionController.add(update);
       },
       onError: (Object e) =>
-          _logMessage('Connecting to device $deviceId resulted in error $e'),
+          _logMessage('Connecting to device $deviceMAC resulted in error $e'),
     );
   }
 
-  Future<void> disconnect(String deviceId) async {
+  Future<void> disconnect(String deviceMAC) async {
     try {
-      _logMessage('disconnecting to device: $deviceId');
+      _logMessage('disconnecting to device: $deviceMAC');
       await _connection.cancel();
     } on Exception catch (e, _) {
       _logMessage("Error disconnecting from a device: $e");
@@ -48,7 +48,7 @@ class BleDeviceConnector extends GetxController {
       // Since [_connection] subscription is terminated, the "disconnected" state cannot be received and propagated
       _deviceConnectionController.add(
         ConnectionStateUpdate(
-          deviceId: deviceId,
+          deviceId: deviceMAC,
           connectionState: DeviceConnectionState.disconnected,
           failure: null,
         ),
