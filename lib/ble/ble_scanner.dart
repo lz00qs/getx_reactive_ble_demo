@@ -7,7 +7,6 @@ import 'package:meta/meta.dart';
 import 'ble_logger.dart';
 
 /// 这个类负责开启和关闭蓝牙扫描器并输出扫描结果
-/// This class is responsible for starting and stopping the BLE scanner and outputting the scan results.
 class BleScanner extends GetxController {
   BleScanner({
     required FlutterReactiveBle ble,
@@ -15,7 +14,8 @@ class BleScanner extends GetxController {
     rxBleScannerState.bindStream(_stateStreamController.stream);
   }
 
-  final FlutterReactiveBle _ble;
+
+  final FlutterReactiveBle _ble; /// 输入 FlutterReactiveBle 来获取结果及功能
   final void Function(String message) _logMessage =
       Get.find<BleLogger>().addToLog;
   final StreamController<BleScannerState> _stateStreamController =
@@ -23,11 +23,13 @@ class BleScanner extends GetxController {
 
   StreamSubscription? _subscription;
 
+  /// 使用 Getx 的 Rx 来监听扫描结果
   final rxBleScannerState = Rx<BleScannerState>(
       const BleScannerState(discoveredDevices: [], scanIsInProgress: false));
 
   final _devices = <DiscoveredDevice>[];
 
+  /// 开始扫描蓝牙设备
   void startScan(BleScannerFilter filter) {
     _logMessage('Start ble discovery');
     _devices.clear();
@@ -56,6 +58,7 @@ class BleScanner extends GetxController {
     _pushState();
   }
 
+  /// 更新扫描结果
   void _pushState() {
     _stateStreamController.add(
       BleScannerState(
@@ -65,6 +68,7 @@ class BleScanner extends GetxController {
     );
   }
 
+  /// 停止扫描蓝牙设备
   Future<void> stopScan() async {
     _logMessage('Stop ble discovery');
 
@@ -73,6 +77,7 @@ class BleScanner extends GetxController {
     _pushState();
   }
 
+  /// GetxController 的生命周期函数，当页面关闭时，关闭扫描器
   @override
   Future<void> onClose() async {
     rxBleScannerState.close();
@@ -81,6 +86,7 @@ class BleScanner extends GetxController {
   }
 }
 
+/// 这个类用来存储扫描到的蓝牙设备以及扫描器状态
 @immutable
 class BleScannerState {
   const BleScannerState({
@@ -92,6 +98,7 @@ class BleScannerState {
   final bool scanIsInProgress;
 }
 
+/// 这个类用来存储扫描器的过滤器
 class BleScannerFilter {
   String? name;
   String? mac;
