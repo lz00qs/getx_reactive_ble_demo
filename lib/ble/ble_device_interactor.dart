@@ -5,38 +5,10 @@ import 'ble_logger.dart';
 
 class BleDeviceInteractor extends GetxController {
   BleDeviceInteractor({
-    required Future<List<DiscoveredService>> Function(String deviceId)
-        bleDiscoverServices,
-    required Future<List<int>> Function(QualifiedCharacteristic characteristic)
-        readCharacteristic,
-    required Future<void> Function(QualifiedCharacteristic characteristic,
-            {required List<int> value})
-        writeWithResponse,
-    required Future<void> Function(QualifiedCharacteristic characteristic,
-            {required List<int> value})
-        writeWithOutResponse,
-    required Stream<List<int>> Function(QualifiedCharacteristic characteristic)
-        subscribeToCharacteristic,
-  })  : _bleDiscoverServices = bleDiscoverServices,
-        _readCharacteristic = readCharacteristic,
-        _writeWithResponse = writeWithResponse,
-        _writeWithoutResponse = writeWithOutResponse,
-        _subScribeToCharacteristic = subscribeToCharacteristic;
+    required FlutterReactiveBle ble,
+  }) : _ble = ble;
 
-  final Future<List<DiscoveredService>> Function(String deviceId)
-      _bleDiscoverServices;
-
-  final Future<List<int>> Function(QualifiedCharacteristic characteristic)
-      _readCharacteristic;
-
-  final Future<void> Function(QualifiedCharacteristic characteristic,
-      {required List<int> value}) _writeWithResponse;
-
-  final Future<void> Function(QualifiedCharacteristic characteristic,
-      {required List<int> value}) _writeWithoutResponse;
-
-  final Stream<List<int>> Function(QualifiedCharacteristic characteristic)
-      _subScribeToCharacteristic;
+  final FlutterReactiveBle _ble;
 
   final void Function(String message) _logMessage =
       Get.find<BleLogger>().addToLog;
@@ -44,7 +16,7 @@ class BleDeviceInteractor extends GetxController {
   Future<List<DiscoveredService>> discoverServices(String deviceId) async {
     try {
       _logMessage('Start discovering services for: $deviceId');
-      final result = await _bleDiscoverServices(deviceId);
+      final result = await _ble.discoverServices(deviceId);
       _logMessage('Discovering services finished');
       return result;
     } on Exception catch (e) {
@@ -56,7 +28,7 @@ class BleDeviceInteractor extends GetxController {
   Future<List<int>> readCharacteristic(
       QualifiedCharacteristic characteristic) async {
     try {
-      final result = await _readCharacteristic(characteristic);
+      final result = await _ble.readCharacteristic(characteristic);
 
       _logMessage('Read ${characteristic.characteristicId}: value = $result');
       return result;
@@ -75,7 +47,7 @@ class BleDeviceInteractor extends GetxController {
     try {
       _logMessage(
           'Write with response value : $value to ${characteristic.characteristicId}');
-      await _writeWithResponse(characteristic, value: value);
+      await _ble.writeCharacteristicWithResponse(characteristic, value: value);
     } on Exception catch (e, s) {
       _logMessage(
         'Error occurred when writing ${characteristic.characteristicId} : $e',
@@ -89,7 +61,8 @@ class BleDeviceInteractor extends GetxController {
   Future<void> writeCharacteristicWithoutResponse(
       QualifiedCharacteristic characteristic, List<int> value) async {
     try {
-      await _writeWithoutResponse(characteristic, value: value);
+      await _ble.writeCharacteristicWithoutResponse(characteristic,
+          value: value);
       _logMessage(
           'Write without response value: $value to ${characteristic.characteristicId}');
     } on Exception catch (e, s) {
@@ -105,6 +78,6 @@ class BleDeviceInteractor extends GetxController {
   Stream<List<int>> subScribeToCharacteristic(
       QualifiedCharacteristic characteristic) {
     _logMessage('Subscribing to: ${characteristic.characteristicId} ');
-    return _subScribeToCharacteristic(characteristic);
+    return _ble.subscribeToCharacteristic(characteristic);
   }
 }

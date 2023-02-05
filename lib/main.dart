@@ -18,11 +18,8 @@ void main() {
   Get.put(BleScanner(ble: ble));
   Get.put(BleDeviceConnector(ble: ble));
   Get.put(BleDeviceInteractor(
-      bleDiscoverServices: ble.discoverServices,
-      readCharacteristic: ble.readCharacteristic,
-      writeWithResponse: ble.writeCharacteristicWithResponse,
-      writeWithOutResponse: ble.writeCharacteristicWithoutResponse,
-      subscribeToCharacteristic: ble.subscribeToCharacteristic));
+    ble: ble,
+  ));
   runApp(MyApp(
     ble: ble,
   ));
