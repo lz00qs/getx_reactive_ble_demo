@@ -5,6 +5,7 @@ import 'package:getx_reactive_ble_demo/ble/profiles/ble_gatt_device.dart';
 import '../../../ble/ble_device_connector.dart';
 import '../../../ble/ble_device_interactor.dart';
 import '../../../ble/profiles/ble_gatt_uuid.dart';
+import '../../../tools/logs.dart';
 import 'characteristic_interaction_dialog.dart';
 
 class DeviceInteractionTab extends StatelessWidget {
@@ -142,6 +143,7 @@ class _ServiceDiscoveryList extends StatelessWidget {
   final DiscoveredDevice discoveredDevice;
   final RxList<DiscoveredService> discoveredServices;
   final RxList<int> _expandedItems = <int>[].obs;
+  final logs = Get.find<Logs>();
 
   RxList<BleGattCharacteristic> _parseCharacteristics(
       DiscoveredService service) {
@@ -165,8 +167,8 @@ class _ServiceDiscoveryList extends StatelessWidget {
       if (characteristic.isIndicatable) {
         bleGattCharacteristic.addProperty(BleGattProperty.indicate);
       }
-      // print(
-      //     "_parseCharacteristics: uuid:${bleGattCharacteristic.uuid.uuid16} | name:${bleGattCharacteristic.name} | properties:${bleGattCharacteristic.properties}");
+      logs.d(
+          "_parseCharacteristics: uuid:${bleGattCharacteristic.uuid.uuid16} | name:${bleGattCharacteristic.name} | properties:${bleGattCharacteristic.properties}");
       result.add(bleGattCharacteristic);
     });
     return result.obs;
@@ -178,8 +180,8 @@ class _ServiceDiscoveryList extends StatelessWidget {
       final bleGattService = BleGattService(
           uuid: BleGattUuid(service.serviceId.toString()),
           characteristics: _parseCharacteristics(service));
-      // print(
-      //     "_parseServices: uuid:${bleGattService.uuid.uuid16} | name:${bleGattService.name} | characteristics:${bleGattService.characteristics.length}");
+      logs.d(
+          "_parseServices: uuid:${bleGattService.uuid.uuid16} | name:${bleGattService.name} | characteristics:${bleGattService.characteristics.length}");
       result.add(bleGattService);
     });
     return result.obs;
@@ -191,8 +193,8 @@ class _ServiceDiscoveryList extends StatelessWidget {
         services: _parseServices(services),
         name: device.name,
         macAddress: device.id);
-    // print(
-    //     "_parseGattDevice: name:${bleGattDevice.name} | mac:${bleGattDevice.macAddress} | services:${bleGattDevice.services.length}");
+    logs.d(
+        "_parseGattDevice: name:${bleGattDevice.name} | mac:${bleGattDevice.macAddress} | services:${bleGattDevice.services.length}");
     return bleGattDevice.obs;
   }
 
@@ -219,11 +221,6 @@ class _ServiceDiscoveryList extends StatelessWidget {
 
   Widget _characteristicTile(
       DiscoveredCharacteristic characteristic, String deviceMAC) {
-    // print("characteristicId: ${characteristic.characteristicId}");
-    // print(
-    //     "BleGattUuid128: ${BleGattUuid(characteristic.characteristicId.toString()).uuid128}");
-    // print(
-    //     "BleGattUuid16: ${BleGattUuid(characteristic.characteristicId.toString()).uuid16}");
     return ListTile(
       onTap: () => Get.dialog(
         CharacteristicInteractionDialog(

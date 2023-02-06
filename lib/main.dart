@@ -9,10 +9,12 @@ import 'package:getx_reactive_ble_demo/ui/pages/splash_page.dart';
 import 'ble/ble_logger.dart';
 import 'ble/ble_scanner.dart';
 import 'ble/ble_status_monitor.dart';
+import 'tools/logs.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final ble = FlutterReactiveBle();
+  Get.put(Logs());
   Get.put(BleLogger(ble: ble));
   Get.put(BleStatusMonitor(ble));
   Get.put(BleScanner(ble: ble));
