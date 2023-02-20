@@ -1,44 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-import 'package:getx_reactive_ble_demo/ble/ble_device_connector.dart';
-import 'package:getx_reactive_ble_demo/ble/ble_device_interactor.dart';
+import 'package:getx_ble/getx_ble.dart';
 import 'package:getx_reactive_ble_demo/routes/app_routes.dart';
+import 'package:getx_reactive_ble_demo/tools/logs.dart';
 
 import 'package:getx_reactive_ble_demo/ui/pages/splash_page.dart';
-import 'ble/ble_logger.dart';
-import 'ble/ble_scanner.dart';
-import 'ble/ble_status_monitor.dart';
-import 'tools/logs.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final ble = FlutterReactiveBle();
   Get.put(Logs());
-  Get.put(BleLogger(ble: ble));
-  Get.put(BleStatusMonitor(ble));
-  Get.put(BleScanner(ble: ble));
-  Get.put(BleDeviceConnector(ble: ble));
-  Get.put(BleDeviceInteractor(
-    ble: ble,
-  ));
-  runApp(MyApp(
-    ble: ble,
-  ));
+  Get.put(GetxBle());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({required this.ble, Key? key}) : super(key: key);
-
-  final FlutterReactiveBle ble;
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: true,
-      home: SplashPage(
-        ble: ble,
-      ),
+      home: SplashPage(),
       getPages: AppRoutes.routes,
     );
   }

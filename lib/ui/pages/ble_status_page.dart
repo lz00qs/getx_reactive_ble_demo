@@ -4,7 +4,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 class BleStatusPage extends StatelessWidget {
   const BleStatusPage({required this.status, Key? key}) : super(key: key);
 
-  final BleStatus? status;
+  final BleStatus status;
 
   String determineText(BleStatus status) {
     switch (status) {
@@ -27,7 +27,7 @@ class BleStatusPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(determineText(status!)),
+        child: Text(determineText(status)),
       ),
     );
   }

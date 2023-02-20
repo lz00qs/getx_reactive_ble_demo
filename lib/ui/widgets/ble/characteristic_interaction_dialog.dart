@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-import '../../../ble/ble_device_interactor.dart';
+import 'package:getx_ble/getx_ble.dart';
 
 class CharacteristicInteractionDialog extends StatefulWidget {
   CharacteristicInteractionDialog({
@@ -23,7 +23,7 @@ class CharacteristicInteractionDialog extends StatefulWidget {
 
   final String deviceMAC;
 
-  final BleDeviceInteractor interactor = Get.find<BleDeviceInteractor>();
+  final BleDeviceInteractor interactor = Get.find<GetxBle>().interactor;
 
   @override
   CharacteristicInteractionDialogState createState() =>
@@ -64,8 +64,8 @@ class CharacteristicInteractionDialogState
       .toList();
 
   Future<void> writeCharacteristicWithResponse() async {
-    await widget.interactor.writeCharacteristicWithResponse(
-        widget.qCharacteristic, _parseInput());
+    await widget.interactor
+        .writeCharacteristicWithResponse(widget.qCharacteristic, _parseInput());
     writeOutput.value = 'Ok';
   }
 

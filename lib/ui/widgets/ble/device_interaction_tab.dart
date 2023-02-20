@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:get/get.dart';
-import 'package:getx_reactive_ble_demo/ble/profiles/ble_gatt_device.dart';
-import '../../../ble/ble_device_connector.dart';
-import '../../../ble/ble_device_interactor.dart';
-import '../../../ble/profiles/ble_gatt_uuid.dart';
+import 'package:getx_ble/getx_ble.dart';
 import '../../../tools/logs.dart';
 import 'characteristic_interaction_dialog.dart';
 
@@ -21,8 +18,8 @@ class DeviceInteractionTab extends StatelessWidget {
   }
 
   final DiscoveredDevice discoveredDevice;
-  final BleDeviceInteractor interactor = Get.find<BleDeviceInteractor>();
-  final BleDeviceConnector connector = Get.find<BleDeviceConnector>();
+  final BleDeviceInteractor interactor = Get.find<GetxBle>().interactor;
+  final BleDeviceConnector connector = Get.find<GetxBle>().connector;
   late final _BleDeviceController _bleDeviceController;
 
   @override
@@ -145,59 +142,6 @@ class _ServiceDiscoveryList extends StatelessWidget {
   final RxList<int> _expandedItems = <int>[].obs;
   final logs = Get.find<Logs>();
 
-  RxList<BleGattCharacteristic> _parseCharacteristics(
-      DiscoveredService service) {
-    final result = <BleGattCharacteristic>[];
-    service.characteristics.asMap().forEach((index, characteristic) {
-      final bleGattCharacteristic = BleGattCharacteristic(
-        uuid: BleGattUuid(characteristic.characteristicId.toString()),
-      );
-      if (characteristic.isReadable) {
-        bleGattCharacteristic.addProperty(BleGattProperty.read);
-      }
-      if (characteristic.isWritableWithoutResponse) {
-        bleGattCharacteristic.addProperty(BleGattProperty.writeUnack);
-      }
-      if (characteristic.isWritableWithResponse) {
-        bleGattCharacteristic.addProperty(BleGattProperty.writeAck);
-      }
-      if (characteristic.isNotifiable) {
-        bleGattCharacteristic.addProperty(BleGattProperty.notify);
-      }
-      if (characteristic.isIndicatable) {
-        bleGattCharacteristic.addProperty(BleGattProperty.indicate);
-      }
-      logs.d(
-          "_parseCharacteristics: uuid:${bleGattCharacteristic.uuid.uuid16} | name:${bleGattCharacteristic.name} | properties:${bleGattCharacteristic.properties}");
-      result.add(bleGattCharacteristic);
-    });
-    return result.obs;
-  }
-
-  RxList<BleGattService> _parseServices(List<DiscoveredService> services) {
-    final result = <BleGattService>[];
-    services.asMap().forEach((index, service) {
-      final bleGattService = BleGattService(
-          uuid: BleGattUuid(service.serviceId.toString()),
-          characteristics: _parseCharacteristics(service));
-      logs.d(
-          "_parseServices: uuid:${bleGattService.uuid.uuid16} | name:${bleGattService.name} | characteristics:${bleGattService.characteristics.length}");
-      result.add(bleGattService);
-    });
-    return result.obs;
-  }
-
-  Rx<BleGattDevice> _parseGattDevice(
-      DiscoveredDevice device, List<DiscoveredService> services) {
-    final bleGattDevice = BleGattDevice(
-        services: _parseServices(services),
-        name: device.name,
-        macAddress: device.id);
-    logs.d(
-        "_parseGattDevice: name:${bleGattDevice.name} | mac:${bleGattDevice.macAddress} | services:${bleGattDevice.services.length}");
-    return bleGattDevice.obs;
-  }
-
   String _characteristicsSummary(DiscoveredCharacteristic c) {
     final props = <String>[];
     if (c.isReadable) {
@@ -239,7 +183,6 @@ class _ServiceDiscoveryList extends StatelessWidget {
 
   List<ExpansionPanel> buildPanels() {
     final panels = <ExpansionPanel>[];
-    _parseGattDevice(discoveredDevice, discoveredServices);
     discoveredServices.asMap().forEach((index, service) {
       return panels.add(
         ExpansionPanel(

@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:getx_reactive_ble_demo/ble/ble_logger.dart';
+import 'package:getx_ble/getx_ble.dart';
 
 class DeviceLogTab extends StatelessWidget {
   DeviceLogTab({Key? key}) : super(key: key);
 
-  final logger = Get.find<BleLogger>();
+  final logger = Get.find<GetxBle>().bleLogger;
 
   @override
   Widget build(BuildContext context) {
